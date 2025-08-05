@@ -1,3 +1,6 @@
+org: mohsinsheikhani
+app: coffee-shop-api
+
 service: coffee-shop-api
 frameworkVersion: "4"
 
