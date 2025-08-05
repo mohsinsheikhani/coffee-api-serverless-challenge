@@ -31,6 +31,9 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+          run_install: true
 
       - name: Deploy to ${{ env.STAGE }}
         run: pnpm sls deploy --stage ${{ env.STAGE }}
