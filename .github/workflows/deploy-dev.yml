@@ -1,0 +1,44 @@
+name: Deploy Cofffe Shop API
+
+on:
+  push:
+    branches:
+      - dev
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  deploy-dev:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    environment: development
+    env:
+      STAGE: dev
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+          run_install: true
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Deploy to ${{ env.STAGE }}
+        run: pnpm deploy:${{ env.STAGE }}
+        env:
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
