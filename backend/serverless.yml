@@ -64,6 +64,25 @@ functions:
         Resource:
           - Fn::GetAtt: [CoffeeTable, Arn]
 
+  deleteCoffee:
+    handler: src/handlers/deleteCoffee.handler
+    events:
+      - http:
+          path: /coffee/{id}
+          method: delete
+          cors: true
+          request:
+            parameters:
+              paths:
+                id: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+          - dynamodb:DeleteItem
+        Resource:
+          - Fn::GetAtt: [CoffeeTable, Arn]
+
 resources:
   Resources:
     CoffeeTable:

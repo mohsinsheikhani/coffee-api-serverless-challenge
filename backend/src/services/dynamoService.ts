@@ -4,6 +4,7 @@ import {
   PutCommand,
   ScanCommand,
   GetCommand,
+  DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { Coffee, CreateCoffeeRequest } from "../models/Coffee";
 import { v4 as uuidv4 } from "uuid";
@@ -53,5 +54,21 @@ export class CoffeeService {
 
     const result = await docClient.send(command);
     return (result.Item as Coffee) || null;
+  }
+
+  async deleteCoffee(id: string): Promise<boolean> {
+    // Checking first if the coffee exists
+    const existingCoffee = await this.getCoffee(id);
+    if (!existingCoffee) {
+      return false;
+    }
+
+    const command = new DeleteCommand({
+      TableName: TABLE_NAME,
+      Key: { id },
+    });
+
+    await docClient.send(command);
+    return true;
   }
 }
