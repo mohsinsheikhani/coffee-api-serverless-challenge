@@ -1,4 +1,4 @@
-name: Deploy Cofffe Shop API
+name: Deploy Cofffe Shop API in Dev Environment
 
 on:
   push:

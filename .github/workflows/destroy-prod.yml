@@ -1,0 +1,37 @@
+name: Destory Coffee Shop API Production Environment
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  teardown:
+    name: Destory Serverless Stack for Closed PR
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+          run_install: false
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Destory Serverless Stack
+        env:
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+        run: pnpm remove:prod
