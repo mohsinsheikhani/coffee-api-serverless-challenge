@@ -83,6 +83,27 @@ functions:
         Resource:
           - Fn::GetAtt: [CoffeeTable, Arn]
 
+  updateCoffee:
+    handler: src/handlers/updateCoffee.handler
+    events:
+      - http:
+          path: /coffee/{id}
+          method: put
+          cors: true
+          request:
+            schemas:
+              application/json: ${file(src/models/updateCoffeeRequest.json)}
+            parameters:
+              paths:
+                id: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+          - dynamodb:UpdateItem
+        Resource:
+          - Fn::GetAtt: [CoffeeTable, Arn]
+
 resources:
   Resources:
     CoffeeTable:

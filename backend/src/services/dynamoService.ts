@@ -5,8 +5,13 @@ import {
   ScanCommand,
   GetCommand,
   DeleteCommand,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
-import { Coffee, CreateCoffeeRequest } from "../models/Coffee";
+import {
+  Coffee,
+  CreateCoffeeRequest,
+  UpdateCoffeeRequest,
+} from "../models/Coffee";
 import { v4 as uuidv4 } from "uuid";
 
 const client = new DynamoDBClient({});
@@ -70,5 +75,68 @@ export class CoffeeService {
 
     await docClient.send(command);
     return true;
+  }
+
+  async updateCoffee(
+    id: string,
+    updateData: UpdateCoffeeRequest
+  ): Promise<Coffee | null> {
+    // Checking first if the coffee exists
+    const existingCoffee = await this.getCoffee(id);
+    if (!existingCoffee) {
+      return null;
+    }
+
+    const now = new Date().toISOString();
+    const updateExpression: string[] = [];
+    const expressionAttributeNames: Record<string, string> = {};
+    const expressionAttributeValues: Record<string, any> = {};
+
+    // Building update expression dynamically
+    if (updateData.name !== undefined) {
+      updateExpression.push("#name = :name");
+      expressionAttributeNames["#name"] = "name";
+      expressionAttributeValues[":name"] = updateData.name.trim();
+    }
+
+    if (updateData.description !== undefined) {
+      updateExpression.push("#description = :description");
+      expressionAttributeNames["#description"] = "description";
+      expressionAttributeValues[":description"] = updateData.description.trim();
+    }
+
+    if (updateData.price !== undefined) {
+      updateExpression.push("#price = :price");
+      expressionAttributeNames["#price"] = "price";
+      expressionAttributeValues[":price"] = updateData.price;
+    }
+
+    if (updateData.category !== undefined) {
+      updateExpression.push("#category = :category");
+      expressionAttributeNames["#category"] = "category";
+      expressionAttributeValues[":category"] = updateData.category.trim();
+    }
+
+    if (updateData.available !== undefined) {
+      updateExpression.push("#available = :available");
+      expressionAttributeNames["#available"] = "available";
+      expressionAttributeValues[":available"] = updateData.available;
+    }
+
+    updateExpression.push("#updatedAt = :updatedAt");
+    expressionAttributeNames["#updatedAt"] = "updatedAt";
+    expressionAttributeValues[":updatedAt"] = now;
+
+    const command = new UpdateCommand({
+      TableName: TABLE_NAME,
+      Key: { id },
+      UpdateExpression: `SET ${updateExpression.join(", ")}`,
+      ExpressionAttributeNames: expressionAttributeNames,
+      ExpressionAttributeValues: expressionAttributeValues,
+      ReturnValues: "ALL_NEW",
+    });
+
+    const result = await docClient.send(command);
+    return result.Attributes as Coffee;
   }
 }

@@ -16,3 +16,11 @@ export interface CreateCoffeeRequest {
   category: string;
   available?: boolean;
 }
+
+export interface UpdateCoffeeRequest {
+  name?: string;
+  description?: string;
+  price?: number;
+  category?: string;
+  available?: boolean;
+}
