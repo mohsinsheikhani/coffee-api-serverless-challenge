@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "serverless offline start",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "deploy:dev": "serverless deploy --stage dev",
     "deploy:prod": "serverless deploy --stage prod",
     "remove:dev": "serverless remove --stage dev",
-    "remove:prod": "serverless remove --stage prod"
+    "remove:prod": "serverless remove --stage prod",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "keywords": [
     "aws",
@@ -25,17 +26,21 @@
   "packageManager": "pnpm@10.14.0",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.152",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.2.0",
     "@types/uuid": "^10.0.0",
+    "jest": "^30.0.5",
     "serverless": "^4.17.2",
     "serverless-iam-roles-per-function": "^3.2.0",
     "serverless-offline": "^14.4.0",
+    "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.859.0",
     "@aws-sdk/lib-dynamodb": "^3.859.0",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "zod": "^4.0.14"
   }
 }

@@ -94,8 +94,6 @@ functions:
           method: put
           cors: true
           request:
-            schemas:
-              application/json: ${file(src/models/updateCoffeeRequest.json)}
             parameters:
               paths:
                 id: true

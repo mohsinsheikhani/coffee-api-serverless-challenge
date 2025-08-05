@@ -1,21 +1,40 @@
-export const validateUpdateCoffeeRequest = (
-  data: any
-): { isValid: boolean; errors: string[] } => {
-  const errors: string[] = [];
+import { z } from "zod";
 
-  // Checkng if at least one field is provided for update
-  const hasValidFields = Object.keys(data).some(
-    (key) =>
-      ["name", "description", "price", "category", "available"].includes(key) &&
-      data[key] !== undefined
-  );
+export const CreateCoffeeSchema = z.object({
+  name: z.string().min(1).trim(),
+  description: z.string().min(1).trim(),
+  price: z.number().positive(),
+  category: z.string().min(1).trim(),
+  available: z.boolean().optional(),
+});
 
-  if (!hasValidFields) {
-    errors.push("At least one field must be provided for update");
-  }
+export const UpdateCoffeeSchema = z
+  .object({
+    name: z.string().min(1).trim().optional(),
+    description: z.string().min(1).trim().optional(),
+    price: z.number().positive().optional(),
+    category: z.string().min(1).trim().optional(),
+    available: z.boolean().optional(),
+  })
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field required for update",
+  });
 
+export type CreateCoffeeInput = z.infer<typeof CreateCoffeeSchema>;
+export type UpdateCoffeeInput = z.infer<typeof UpdateCoffeeSchema>;
+
+export const validateCreateCoffeeRequest = (data: unknown) => {
+  const result = CreateCoffeeSchema.safeParse(data);
   return {
-    isValid: errors.length === 0,
-    errors,
+    isValid: result.success,
+    errors: result.success ? [] : result.error.issues.map((e) => e.message),
+  };
+};
+
+export const validateUpdateCoffeeRequest = (data: unknown) => {
+  const result = UpdateCoffeeSchema.safeParse(data);
+  return {
+    isValid: result.success,
+    errors: result.success ? [] : result.error.issues.map((e) => e.message),
   };
 };
