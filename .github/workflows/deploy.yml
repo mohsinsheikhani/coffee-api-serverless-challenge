@@ -35,6 +35,9 @@ jobs:
           version: 10.14.0
           run_install: true
 
+      - name: Run tests
+        run: pnpm test
+
       - name: Deploy to ${{ env.STAGE }}
         run: pnpm sls deploy --stage ${{ env.STAGE }}
         env:
