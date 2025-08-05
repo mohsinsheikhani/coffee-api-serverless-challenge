@@ -3,6 +3,7 @@ import {
   DynamoDBDocumentClient,
   PutCommand,
   ScanCommand,
+  GetCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { Coffee, CreateCoffeeRequest } from "../models/Coffee";
 import { v4 as uuidv4 } from "uuid";
@@ -42,5 +43,15 @@ export class CoffeeService {
 
     const result = await docClient.send(command);
     return (result.Items as Coffee[]) || [];
+  }
+
+  async getCoffee(id: string): Promise<Coffee | null> {
+    const command = new GetCommand({
+      TableName: TABLE_NAME,
+      Key: { id },
+    });
+
+    const result = await docClient.send(command);
+    return (result.Item as Coffee) || null;
   }
 }

@@ -46,6 +46,24 @@ functions:
         Resource:
           - Fn::GetAtt: [CoffeeTable, Arn]
 
+  getCoffee:
+    handler: src/handlers/getCoffee.handler
+    events:
+      - http:
+          path: /coffee/{id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                id: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+        Resource:
+          - Fn::GetAtt: [CoffeeTable, Arn]
+
 resources:
   Resources:
     CoffeeTable:
