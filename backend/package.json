@@ -4,6 +4,7 @@
   "description": "Coffee Shop CRUD REST API built as part of the Coding Challenge using Serverless Framework v4",
   "main": "index.js",
   "scripts": {
+    "start": "serverless offline start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "deploy:dev": "serverless deploy --stage dev",
@@ -23,10 +24,18 @@
   "license": "ISC",
   "packageManager": "pnpm@10.14.0",
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
     "@types/node": "^24.2.0",
+    "@types/uuid": "^10.0.0",
     "serverless": "^4.17.2",
+    "serverless-iam-roles-per-function": "^3.2.0",
     "serverless-offline": "^14.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.859.0",
+    "@aws-sdk/lib-dynamodb": "^3.859.0",
+    "uuid": "^11.1.0"
   }
 }

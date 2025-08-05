@@ -9,3 +9,65 @@ provider:
   environment:
     COFFEE_TABLE: ${self:service}-${self:provider.stage}-coffee
     STAGE: ${self:provider.stage}
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-offline
+
+functions:
+  createCoffee:
+    handler: src/handlers/createCoffee.handler
+    events:
+      - http:
+          path: /coffee
+          method: post
+          cors: true
+          request:
+            schemas:
+              application/json: ${file(src/models/createCoffeeRequest.json)}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource:
+          - Fn::GetAtt: [CoffeeTable, Arn]
+
+resources:
+  Resources:
+    CoffeeTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.COFFEE_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        Tags:
+          - Key: Environment
+            Value: ${self:provider.stage}
+          - Key: Service
+            Value: ${self:service}
+
+  Outputs:
+    ApiGatewayRestApiId:
+      Value:
+        Ref: ApiGatewayRestApi
+      Export:
+        Name: ${self:service}-${self:provider.stage}-ApiGatewayRestApiId
+
+    ApiGatewayRestApiRootResourceId:
+      Value:
+        Fn::GetAtt:
+          - ApiGatewayRestApi
+          - RootResourceId
+      Export:
+        Name: ${self:service}-${self:provider.stage}-ApiGatewayRestApiRootResourceId
+
+    CoffeeTableName:
+      Value:
+        Ref: CoffeeTable
+      Export:
+        Name: ${self:service}-${self:provider.stage}-CoffeeTableName
