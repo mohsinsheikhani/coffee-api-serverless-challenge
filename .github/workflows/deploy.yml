@@ -15,6 +15,11 @@ jobs:
     environment: development
     env:
       STAGE: dev
+
+    defaults:
+      run:
+        working-directory: ./backend
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
