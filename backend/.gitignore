@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+dist/
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Serverless directories
+.serverless/
+
+# Environment variables
+.env
+
+.vscode/
+
+# Optional eslint cache
+.eslintcache

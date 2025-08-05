@@ -1,0 +1,32 @@
+{
+  "name": "coffee-api-serverless-challenge",
+  "version": "1.0.0",
+  "description": "Coffee Shop CRUD REST API built as part of the Coding Challenge using Serverless Framework v4",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "deploy:dev": "serverless deploy --stage dev",
+    "deploy:prod": "serverless deploy --stage prod",
+    "remove:dev": "serverless remove --stage dev",
+    "remove:prod": "serverless remove --stage prod"
+  },
+  "keywords": [
+    "aws",
+    "serverless",
+    "typescript",
+    "lambda",
+    "api-gateway",
+    "dynamodb"
+  ],
+  "author": "Mohsin Sheikhani",
+  "license": "ISC",
+  "packageManager": "pnpm@10.14.0",
+  "devDependencies": {
+    "@types/node": "^24.2.0",
+    "serverless": "^4.17.2",
+    "serverless-offline": "^14.4.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}

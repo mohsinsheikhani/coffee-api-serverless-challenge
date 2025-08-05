@@ -1,0 +1,11 @@
+service: coffee-shop-api
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+  environment:
+    COFFEE_TABLE: ${self:service}-${self:provider.stage}-coffee
+    STAGE: ${self:provider.stage}
