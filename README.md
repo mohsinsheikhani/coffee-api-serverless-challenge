@@ -168,3 +168,5 @@ Run the app
 ```bash
 npm run dev
 ```
+
+<img width="1912" height="716" alt="image" src="https://github.com/user-attachments/assets/cef64606-67c8-4c57-8c9f-dc984687b1e9" />
