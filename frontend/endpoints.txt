@@ -1,0 +1,6 @@
+endpoints:
+  POST - https://t2u2ef5dq4.execute-api.us-east-1.amazonaws.com/dev/coffee
+  GET - https://t2u2ef5dq4.execute-api.us-east-1.amazonaws.com/dev/coffee
+  GET - https://t2u2ef5dq4.execute-api.us-east-1.amazonaws.com/dev/coffee/{id}
+  DELETE - https://t2u2ef5dq4.execute-api.us-east-1.amazonaws.com/dev/coffee/{id}
+  PUT - https://t2u2ef5dq4.execute-api.us-east-1.amazonaws.com/dev/coffee/{id}
