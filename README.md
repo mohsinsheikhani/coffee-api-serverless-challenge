@@ -103,6 +103,9 @@ The project implements a comprehensive CI/CD strategy using GitHub Actions with 
 - **destroy-dev.yml**: Cleanup workflow for development resources
 - **destroy-prod.yml**: Cleanup workflow for development resources
 
+<img width="1913" height="853" alt="image" src="https://github.com/user-attachments/assets/9018cd5a-b506-4753-8cee-7f549d407a5d" />
+
+
 ### Environment Management
 
 The application supports multiple deployment stages (dev/prod) with:
