@@ -1,4 +1,7 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  ConditionalCheckFailedException,
+  DynamoDBClient,
+} from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,
   PutCommand,
@@ -62,31 +65,28 @@ export class CoffeeService {
   }
 
   async deleteCoffee(id: string): Promise<boolean> {
-    // Checking first if the coffee exists
-    const existingCoffee = await this.getCoffee(id);
-    if (!existingCoffee) {
-      return false;
-    }
-
     const command = new DeleteCommand({
       TableName: TABLE_NAME,
+      ConditionExpression: "attribute_exists(id)",
       Key: { id },
     });
 
-    await docClient.send(command);
-    return true;
+    try {
+      await docClient.send(command);
+      return true;
+    } catch (error) {
+      if (error instanceof ConditionalCheckFailedException) {
+        return false;
+      }
+
+      throw error;
+    }
   }
 
   async updateCoffee(
     id: string,
     updateData: UpdateCoffeeRequest
   ): Promise<Coffee | null> {
-    // Checking first if the coffee exists
-    const existingCoffee = await this.getCoffee(id);
-    if (!existingCoffee) {
-      return null;
-    }
-
     const now = new Date().toISOString();
     const updateExpression: string[] = [];
     const expressionAttributeNames: Record<string, string> = {};
@@ -130,13 +130,22 @@ export class CoffeeService {
     const command = new UpdateCommand({
       TableName: TABLE_NAME,
       Key: { id },
+      ConditionExpression: "attribute_exists(id)",
       UpdateExpression: `SET ${updateExpression.join(", ")}`,
       ExpressionAttributeNames: expressionAttributeNames,
       ExpressionAttributeValues: expressionAttributeValues,
       ReturnValues: "ALL_NEW",
     });
 
-    const result = await docClient.send(command);
-    return result.Attributes as Coffee;
+    try {
+      const result = await docClient.send(command);
+      return result.Attributes as Coffee;
+    } catch (error) {
+      if (error instanceof ConditionalCheckFailedException) {
+        return null;
+      }
+
+      throw error;
+    }
   }
 }
